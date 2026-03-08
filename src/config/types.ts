@@ -4,26 +4,12 @@ export interface IColorsConfig {
     border: number
 }
 
-export interface IYardConfig {
-    x: number
-    y: number
-    width: number
-    height: number
-    radius: number
+export interface IGameSettings {
+    animalsAmount: number
+    pickupDistance: number
+    maxGroup: number
 }
-
 export interface IGameConfig {
     colorsConfig: IColorsConfig
-    yardConfig: IYardConfig
-  
-    hero: {
-      radius: number
-      speed: number
-    }
-  
-    animal: {
-      radius: number
-      maxGroup: number
-      pickupDistance: number
-    }
+    gameSettings: IGameSettings
   }

@@ -2,8 +2,10 @@ import { Application } from "pixi.js";
 import { YardController } from "./modules/yard/YardController";
 import { HeroController } from "./modules/hero/HeroController";
 import { InputHandler } from "./core/inputHandler/InputHandler";
-import { CORE_EVENTS } from "./core/type";
-import EventBus from "./core/EventBus";
+import { CORE_EVENTS } from "./core/eventBus/type";
+import EventBus from "./core/eventBus/EventBus";
+import { AnimalController } from "./modules/animals/AnimalController";
+import { HUDController } from "./modules/hud/HUDController";
 
 export class App {
   private static instance: App | null = null;
@@ -34,8 +36,14 @@ export class App {
     const yardController = new YardController();
     yardController.init(this.app);
 
+    const hudController = new HUDController();
+    hudController.init(this.app);
+
     const heroController = new HeroController();
     heroController.init(this.app);
+
+    const animalController = new AnimalController();
+    animalController.init(this.app);
 
     this.app.ticker.add(this.onUpdate)
 

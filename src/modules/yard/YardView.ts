@@ -1,5 +1,5 @@
 import { Container, Graphics } from "pixi.js";
-import { IColorsConfig, IYardConfig } from "../../config/types";
+import { IColorsConfig } from "../../config/types";
 
 export class YardView {
   readonly root = new Container();
@@ -7,17 +7,17 @@ export class YardView {
 
   private readonly yard = new Graphics();
 
-  constructor(colorsConfig: IColorsConfig, yardConfig: IYardConfig) {
-    this.drawYard(yardConfig, colorsConfig);
+  constructor(colorsConfig: IColorsConfig) {
+    this.drawYard(colorsConfig);
     this.drawField(colorsConfig);
     this.field.addChild(this.yard);
 
     this.root.addChild(this.field);
   }
 
-  private drawYard(yardConfig: IYardConfig, colorsConfig: IColorsConfig): void {
+  private drawYard(colorsConfig: IColorsConfig): void {
     this.yard.clear();
-    this.yard.roundRect(yardConfig.x, yardConfig.y, yardConfig.width, yardConfig.height, yardConfig.radius);
+    this.yard.roundRect(window.innerWidth -200, window.innerHeight -180, 200, 180, 12);
     this.yard.fill(colorsConfig.yard);
     this.yard.stroke({
       color: colorsConfig.border,

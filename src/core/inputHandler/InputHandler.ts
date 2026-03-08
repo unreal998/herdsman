@@ -1,4 +1,4 @@
-import EventBus from "../EventBus"
+import EventBus from "../eventBus/EventBus"
 import { INPUT_EVENTS, Direction } from "./types"
 import { Container, FederatedPointerEvent } from "pixi.js"
 
@@ -41,10 +41,7 @@ export class InputHandler {
 
     const pos = e.getLocalPosition(e.currentTarget as Container)
 
-    EventBus.emit(INPUT_EVENTS.CLICK, {
-      x: pos.x,
-      y: pos.y
-    })
+    EventBus.emit(INPUT_EVENTS.CLICK, { x: pos.x, y: pos.y })
 
   }
 
