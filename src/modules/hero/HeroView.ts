@@ -43,16 +43,16 @@ export class HeroView {
   private _onDirectionChange(direction: Direction) {
     switch (direction) {
       case "UP":
-        this.hero.y -= 10
+        this.target.y -= this.speed * 2
         break
       case "DOWN":
-        this.hero.y += 10
+        this.target.y += this.speed * 2
         break
       case "LEFT":
-        this.hero.x -= 10
+        this.target.x -= this.speed * 2
         break
       case "RIGHT":
-        this.hero.x += 10
+        this.target.x += this.speed * 2
         break
       default:
         break;
@@ -76,7 +76,7 @@ export class HeroView {
 
     const move = Number((this.speed * deltaTime).toFixed(0))
 
-    if (Math.abs(dx) < 10) {
+    if (Math.abs(dx) < 5) {
       this.hero.x = this.target.x
     } else {
       if (dx > 0) {
@@ -86,7 +86,7 @@ export class HeroView {
       }
     }
 
-    if (Math.abs(dy) < 10) {
+    if (Math.abs(dy) < 5) {
       this.hero.y = this.target.y
     } else {
       if (dy > 0) {
