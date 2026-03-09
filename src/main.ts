@@ -6,11 +6,17 @@ import { CORE_EVENTS } from "./core/eventBus/type";
 import EventBus from "./core/eventBus/EventBus";
 import { AnimalController } from "./modules/animals/AnimalController";
 import { HUDController } from "./modules/hud/HUDController";
+import { isColliding } from "./core/helpers/collidingDimension";
 
 export class App {
   private static instance: App | null = null;
 
   private app!: Application;
+  private onUpdate!: ({ deltaTime } : {deltaTime: number}) => void
+
+  constructor () {
+    this.onUpdate = this._onUpdate.bind(this)
+  }
 
   public static getInstance(): App {
     if (!App.instance) {
@@ -47,11 +53,14 @@ export class App {
 
     this.app.ticker.add(this.onUpdate)
 
+    globalThis.__PIXI_APP__ = this.app;
   }
 
-  private onUpdate({deltaTime}: {deltaTime: number}) {
+  private _onUpdate({deltaTime}: {deltaTime: number}) {
     EventBus.emit(CORE_EVENTS.UPDATE, deltaTime)
+    isColliding(this.app.stage)
   }
+
 }
 
 App.getInstance().init();

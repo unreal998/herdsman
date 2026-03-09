@@ -15,6 +15,7 @@ export class YardController {
   }
 
   private initView(app: Application) {
+    app.stage.addChild(this.view.field);
     app.stage.addChild(this.view.root);
   }
 }

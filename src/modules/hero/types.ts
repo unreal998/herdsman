@@ -1,3 +1,4 @@
 export enum HERO_EVENTS {
-    MOVE = 'MOVE'
+    MOVE = 'MOVE',
+    PICK_UP_ANIMAL = 'PICK_UP_ANIMAL'
 };

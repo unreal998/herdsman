@@ -24,10 +24,11 @@ export class HeroView {
 
   private init() {
 
-    this.hero.circle(0, 0, 14)
+    this.hero.circle(20, 20, 14)
     this.hero.fill(0xff3b30)
 
     this.root.zIndex = 2;
+    this.root.label = 'hero';
     this.root.addChild(this.hero)
 
     this.addListeners()
@@ -64,15 +65,13 @@ export class HeroView {
     this.target = { x, y }
   }
 
-  private _onUpdate(deltaTime: number) {
-
+  private moveTowardsTarget(deltaTime: number) {
     const dx = this.target.x - this.hero.x
     const dy = this.target.y - this.hero.y
 
     if (Math.abs(dx) < 1 && Math.abs(dy) < 1) {
       return;
     }
-
 
     const move = Number((this.speed * deltaTime).toFixed(0))
 
@@ -95,5 +94,9 @@ export class HeroView {
         this.hero.y -= move
       }
     }
+  }
+
+  private _onUpdate(deltaTime: number) {
+    this.moveTowardsTarget(deltaTime);
   }
 }

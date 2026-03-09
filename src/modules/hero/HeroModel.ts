@@ -5,6 +5,7 @@ export class HeroModel {
   private _position: ICoordinate = { x: 150, y: 320 }
   private _target: ICoordinate = { x: 150, y: 320 }
   private _speed: number = 0.1
+  private _animals: string[] = []
 
   get speed() {
     return this._speed
@@ -24,6 +25,14 @@ export class HeroModel {
 
   get position() {
     return this._position
+  }
+
+  get animals() {
+    return this._animals
+  }
+
+  set animals(animals: string[]) {
+    this._animals = animals
   }
 
 }

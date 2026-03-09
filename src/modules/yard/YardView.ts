@@ -5,25 +5,26 @@ export class YardView {
   readonly root = new Container();
   readonly field = new Graphics();
 
+
   private readonly yard = new Graphics();
 
   constructor(colorsConfig: IColorsConfig) {
     this.drawYard(colorsConfig);
     this.drawField(colorsConfig);
-    this.field.addChild(this.yard);
-
-    this.root.addChild(this.field);
+    this.root.addChild(this.yard);
+    this.root.label = 'yard';
   }
 
   private drawYard(colorsConfig: IColorsConfig): void {
     this.yard.clear();
-    this.yard.roundRect(window.innerWidth -200, window.innerHeight -180, 200, 180, 12);
+    this.yard.roundRect(window.innerWidth -400, window.innerHeight -380, 200, 180, 12);
     this.yard.fill(colorsConfig.yard);
     this.yard.stroke({
       color: colorsConfig.border,
       width: 2,
       alpha: 0.3,
     });
+    this.yard.zIndex = 1;
   }
 
   private drawField(colorsConfig: IColorsConfig): void {
