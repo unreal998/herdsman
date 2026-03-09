@@ -4,18 +4,22 @@ import { HeroController } from "./modules/hero/HeroController";
 import { InputHandler } from "./core/inputHandler/InputHandler";
 import { CORE_EVENTS } from "./core/eventBus/type";
 import EventBus from "./core/eventBus/EventBus";
-import { AnimalController } from "./modules/animals/AnimalController";
+import { AnimalController } from "./modules/animal/AnimalController";
 import { HUDController } from "./modules/hud/HUDController";
 import { isColliding } from "./core/helpers/collidingDimension";
+import { EngineController } from "./modules/engine/EngineController";
+import { ENGINE_EVENTS } from "./modules/engine/types";
 
 export class App {
   private static instance: App | null = null;
 
   private app!: Application;
   private onUpdate!: ({ deltaTime } : {deltaTime: number}) => void
+  private onAddAnimal!: () => void
 
   constructor () {
     this.onUpdate = this._onUpdate.bind(this)
+    this.onAddAnimal = this._onAddAnimal.bind(this)
   }
 
   public static getInstance(): App {
@@ -48,17 +52,26 @@ export class App {
     const heroController = new HeroController();
     heroController.init(this.app);
 
-    const animalController = new AnimalController();
-    animalController.init(this.app);
+    new EngineController();
 
-    this.app.ticker.add(this.onUpdate)
+    this.addListeners();
 
     globalThis.__PIXI_APP__ = this.app;
+  }
+
+  private addListeners() {
+    this.app.ticker.add(this.onUpdate)
+    EventBus.on(ENGINE_EVENTS.ADD_ANIMAL, this.onAddAnimal);
   }
 
   private _onUpdate({deltaTime}: {deltaTime: number}) {
     EventBus.emit(CORE_EVENTS.UPDATE, deltaTime)
     isColliding(this.app.stage)
+  }
+
+  private _onAddAnimal() {
+    const animalController = new AnimalController();
+    animalController.init(this.app);
   }
 
 }

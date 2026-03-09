@@ -25,7 +25,7 @@ export class AnimalView {
   private init() {
     this.onUpdate = this._onUpdate.bind(this)
 
-    this.root.label = 'animal'
+    this.root.label = 'animal' + this.root.uid
     this.animal
       .circle(0, 0, 10)
       .fill(0xffffff)

@@ -1,42 +1,72 @@
 import { Container, Rectangle } from "pixi.js"
-import EventBus from "../eventBus/EventBus"
-import { HERO_EVENTS } from "../../modules/hero/types"
-import { ANIMAL_EVENTS } from "../../modules/animals/types"
+
+type CollisionCallback = (payload: any) => void;
+
+const collisionSubscriptions = new Map<string, CollisionCallback[]>();
+
+export function onCollision(
+  labelA: string,
+  labelB: string,
+  callback: CollisionCallback
+) {
+  const key = `${labelA}:${labelB}`;
+
+  if (!collisionSubscriptions.has(key)) {
+    collisionSubscriptions.set(key, []);
+  }
+
+  collisionSubscriptions.get(key)!.push(callback);
+}
+
+export function offCollision(
+  labelA: string,
+  labelB: string,
+  callback: CollisionCallback
+) {
+  const key = `${labelA}:${labelB}`;
+  const reverseKey = `${labelB}:${labelA}`;
+
+  collisionSubscriptions.get(key)?.filter(cb => cb !== callback);
+  collisionSubscriptions.get(reverseKey)?.filter(cb => cb !== callback);
+}
+
+function emitCollision(a: Container, b: Container) {
+  const key = `${a.label}:${b.label}`;
+  const reverseKey = `${b.label}:${a.label}`;
+
+  collisionSubscriptions.get(key)?.forEach(cb => cb({ a, b }));
+  collisionSubscriptions.get(reverseKey)?.forEach(cb => cb({ a, b }));
+}
 
 export function isColliding(stage: Container) {
-    stage.children.forEach((itemA) => {
-      if (itemA.label === 'hero' || itemA.label === 'animal') {
-        const aBounds = itemA.getBounds()
-        stage.children.forEach((itemB) => {
-          if (itemB.label !== itemA.label && (itemB.label === 'hero' || itemB.label === 'animal' || itemB.label === 'yard')) {
-            const bBounds = itemB.getBounds()
-            const aBoundRect = new Rectangle(
-              aBounds.x,
-              aBounds.y,
-              aBounds.width,
-              aBounds.height
-            )
-        
-            const bBoundRect = new Rectangle(
-              bBounds.x,
-              bBounds.y,
-              bBounds.width,
-              bBounds.height
-            )
+  const children = stage.children;
 
-            if (aBoundRect.intersects(bBoundRect) ) {
-                if (itemA.label === 'hero' && itemB.label === "animal") {
-                  EventBus.emit(HERO_EVENTS.PICK_UP_ANIMAL, itemB)
-                }
-                if (itemA.label === 'animal' && itemB.label === "yard") {
-                  EventBus.emit(ANIMAL_EVENTS.PARK_ANIMAL, itemA)
-                }
-            }
-    
-          } else {
-            return false;
-          }
-        })
+  for (let i = 0; i < children.length; i++) {
+    const itemA = children[i];
+
+    for (let j = i + 1; j < children.length; j++) {
+      const itemB = children[j];
+
+      const aBounds = itemA.getBounds();
+      const bBounds = itemB.getBounds();
+
+      const rectA = new Rectangle(
+        aBounds.x,
+        aBounds.y,
+        aBounds.width,
+        aBounds.height
+      );
+
+      const rectB = new Rectangle(
+        bBounds.x,
+        bBounds.y,
+        bBounds.width,
+        bBounds.height
+      );
+
+      if (rectA.intersects(rectB)) {
+        emitCollision(itemA, itemB);
       }
-    })
+    }
   }
+}

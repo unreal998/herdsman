@@ -28,7 +28,7 @@ export class EventBus {
 
     emit(
       event: string,
-      payload: any
+      payload?: any
     ) {
 
       this.listeners[event]?.forEach((handler) => handler(payload))
