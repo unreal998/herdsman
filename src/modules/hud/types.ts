@@ -1,0 +1,3 @@
+export enum HUD_EVENTS {
+    SCORE_UPDATED = 'SCORE_UPDATED',
+}

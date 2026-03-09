@@ -1,11 +1,11 @@
 export class HUDModel {
     private _score: number = 0
 
-    get animalsAmount() {
+    get score() {
         return this._score
     }
 
-    set animalsAmount(amount: number) {
+    set score(amount: number) {
         this._score = amount
     }
 }

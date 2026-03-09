@@ -5,6 +5,7 @@ import { ANIMAL_EVENTS } from "./types"
 import EventBus from "../../core/eventBus/EventBus"
 import { HERO_EVENTS } from "../hero/types"
 import { ICoordinate } from "../../core/inputHandler/types"
+import { HUD_EVENTS } from "../hud/types"
 
 export class AnimalController {
     private model!: AnimalModel
@@ -47,6 +48,7 @@ export class AnimalController {
     private _onParkAnimal() {
         this.view.destroy();
         this.removeListeners();
+        EventBus.emit(HUD_EVENTS.SCORE_UPDATED, 1);
     }
 
     private _onFollowHero( target: ICoordinate) {

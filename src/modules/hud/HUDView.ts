@@ -19,4 +19,8 @@ export class HUDView {
         this.score.position = { x: window.innerWidth / 2, y: 10 };
         this.root.addChild(this.score);
     }
+
+    updateScore(score: number) {
+        this.score.text = score.toString();
+    }
 }
