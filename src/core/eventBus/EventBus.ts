@@ -1,4 +1,4 @@
-import { IEventBus } from "./type";
+import { IEventBus } from './type';
 
 export class EventBus implements IEventBus {
   private listeners: Map<string, Set<(payload: unknown) => void>> = new Map();

@@ -1,4 +1,6 @@
-export class HUDModel {
+import { IHUDModel } from './types';
+
+export class HUDModel implements IHUDModel {
   private _score: number = 0;
 
   get score() {

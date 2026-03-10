@@ -4,10 +4,11 @@ import { CORE_EVENTS } from '../../core/eventBus/type';
 import { ICoordinate } from '../../core/inputHandler/types';
 import { clamp } from '../../utils/clamp';
 import { BaseView } from '../../core/baseModule/BaseView';
+import { IAnimalView } from './types';
 
-export class AnimalView extends BaseView {
+export class AnimalView extends BaseView implements IAnimalView {
   private RANGE_MULTIPLIER = 300;
-  public animal!: Sprite;
+  private animal!: Sprite;
 
   private speed: number = 2;
   public isPickedUp: boolean = false;

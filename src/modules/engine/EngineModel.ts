@@ -1,4 +1,6 @@
-export class EngineModel {
+import { IEngineModel } from './types';
+
+export class EngineModel implements IEngineModel {
   private _animalsCount: number = 0;
   private _animalsLimit: number = 12;
   private _animalsSpawnInterval: number = 3000;

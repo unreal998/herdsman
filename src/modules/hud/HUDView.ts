@@ -1,8 +1,9 @@
 import { Text } from 'pixi.js';
 import { BaseView } from '../../core/baseModule/BaseView';
+import { IHUDView } from './types';
 
-export class HUDView extends BaseView {
-  public score!: Text;
+export class HUDView extends BaseView implements IHUDView {
+  private score!: Text;
 
   constructor() {
     super();

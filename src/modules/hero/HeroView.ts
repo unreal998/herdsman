@@ -1,11 +1,11 @@
-import { AnimatedSprite, Assets, Container, Text, Texture } from 'pixi.js';
+import { AnimatedSprite, Assets, Text, Texture } from 'pixi.js';
 import EventBus from '../../core/eventBus/EventBus';
 import { INPUT_EVENTS, ICoordinate } from '../../core/inputHandler/types';
 import { CORE_EVENTS } from '../../core/eventBus/type';
-import { HERO_EVENTS } from './types';
+import { HERO_EVENTS, IHeroView } from './types';
 import { BaseView } from '../../core/baseModule/BaseView';
 
-export class HeroView extends BaseView {
+export class HeroView extends BaseView implements IHeroView {
   public hero!: AnimatedSprite;
   public heroIndicators!: Text;
   private onClick: (position: ICoordinate) => void;

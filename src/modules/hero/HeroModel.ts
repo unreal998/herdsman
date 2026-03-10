@@ -1,4 +1,6 @@
-export class HeroModel {
+import { IHeroModel } from './types';
+
+export class HeroModel implements IHeroModel {
   private _animalsLimit: number = 5;
   private _speed: number = 2;
   private _animals: string[] = [];

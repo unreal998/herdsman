@@ -1,16 +1,7 @@
-import { ICoordinate } from '../../core/inputHandler/types';
+import { IAnimalModel } from './types';
 
-export class AnimalModel {
-  private _position: ICoordinate = { x: 0, y: 0 };
+export class AnimalModel implements IAnimalModel {
   private _isPickedUp: boolean = false;
-
-  get position() {
-    return this._position;
-  }
-
-  set position(position: ICoordinate) {
-    this._position = position;
-  }
 
   get isPickedUp() {
     return this._isPickedUp;
