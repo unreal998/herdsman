@@ -1,4 +1,4 @@
-import { Container, Graphics, Text } from "pixi.js"
+import { AnimatedSprite, Assets, Container, Sprite, Text, Texture } from "pixi.js"
 import EventBus from "../../core/eventBus/EventBus"
 import { INPUT_EVENTS, ICoordinate } from "../../core/inputHandler/types";
 import { CORE_EVENTS } from "../../core/eventBus/type";
@@ -7,16 +7,18 @@ import { HERO_EVENTS } from "./types";
 export class HeroView {
 
   public readonly root = new Container()
-  public readonly hero = new Graphics()
+  public hero!: AnimatedSprite | Sprite
   public readonly heroIndicators = new Text()
   public target: ICoordinate = { x: 0, y: 0 }
   private onClick: (position: ICoordinate) => void
   private onUpdate: (deltaTime: number) => void
+  private onAdditionalResourcesLoaded: () => void
   private speed: number
 
   constructor(speed: number) {
     this.onClick = this._onClick.bind(this)
     this.onUpdate = this._onUpdate.bind(this)
+    this.onAdditionalResourcesLoaded = this._onAdditionalResourcesLoaded.bind(this)
     this.speed = speed;
 
     this.init()
@@ -27,8 +29,13 @@ export class HeroView {
     this.heroIndicators.text = '0'
     this.heroIndicators.x = 10
     this.heroIndicators.y = -15
-    this.hero.circle(20, 20, 14)
-    this.hero.fill(0xff3b30)
+
+    this.hero = new Sprite(Assets.get('hero'))
+    this.hero.texture = Assets.get('hero')
+    this.hero.scale.set(0.5)
+    this.hero.anchor.set(0.5)
+    this.hero.width = 70
+    this.hero.height = 70
 
     this.root.zIndex = 2;
     this.root.label = 'hero';
@@ -42,6 +49,7 @@ export class HeroView {
   addListeners() {
     EventBus.on(INPUT_EVENTS.CLICK, this.onClick)
     EventBus.on(CORE_EVENTS.UPDATE, this.onUpdate)
+    EventBus.on(CORE_EVENTS.ADDITIONAL_RESOURCES_LOADED, this.onAdditionalResourcesLoaded)
   }
 
 
@@ -59,6 +67,7 @@ export class HeroView {
     }
 
     const move = Number((this.speed * deltaTime).toFixed(0))
+    const angle = Math.atan2(dy, dx)
 
     if (Math.abs(dx) < 5) {
       this.root.x = this.target.x
@@ -79,6 +88,7 @@ export class HeroView {
         this.root.y -= move
       }
     }
+    this.root.rotation = angle - Math.PI / 2;
   }
 
   public animalCountUpdated(text: string) {
@@ -87,5 +97,12 @@ export class HeroView {
 
   private _onUpdate(deltaTime: number) {
     this.moveTowardsTarget(deltaTime);
+  }
+
+  private _onAdditionalResourcesLoaded() {
+    const textures: Texture[] = [Assets.get('hero_walk_1'), Assets.get('hero_walk_2')]
+    this.hero = new AnimatedSprite(textures);
+    (this.hero as AnimatedSprite).loop = true;
+    (this.hero as AnimatedSprite).play();
   }
 }

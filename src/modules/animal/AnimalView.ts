@@ -1,13 +1,14 @@
-import { Container, Graphics } from "pixi.js"
+import { Assets, Container, Sprite } from "pixi.js"
 import EventBus from "../../core/eventBus/EventBus"
 import { CORE_EVENTS } from "../../core/eventBus/type"
 import { ICoordinate } from "../../core/inputHandler/types"
+import { clamp } from "../../utils/clamp";
 
 export class AnimalView {
 
   private RANGE_MULTIPLIER = 300;
   public readonly root = new Container()
-  public readonly animal = new Graphics()
+  public readonly animal = new Sprite()
   private onUpdate!: (deltaTime: number) => void
 
   private speed: number = 2
@@ -26,9 +27,11 @@ export class AnimalView {
     this.onUpdate = this._onUpdate.bind(this)
 
     this.root.label = 'animal' + this.root.uid
-    this.animal
-      .circle(0, 0, 10)
-      .fill(0xffffff)
+
+    this.animal.texture = Assets.get(Math.random() > 0.5 ? 'cow1' : 'cow2')
+    this.animal.anchor.set(0.5)
+    this.animal.width = 50
+    this.animal.height = 146
 
     this.root.addChild(this.animal)
 
@@ -40,10 +43,18 @@ export class AnimalView {
 
   private generatePatrolPath() {
     for (let i = 0; i < 10; i++) {
-      this.patrolPath.push({
-        x: (Math.random() * this.RANGE_MULTIPLIER) + this.animal.position.x,
-        y: (Math.random() * this.RANGE_MULTIPLIER) + this.animal.position.y,
-      })
+      const x = clamp(
+        this.animal.position.x + (Math.random() * this.RANGE_MULTIPLIER),
+        0,
+        window.innerWidth
+      )
+    
+      const y = clamp(
+        this.animal.position.y + (Math.random() * this.RANGE_MULTIPLIER),
+        0,
+        window.innerHeight
+      )
+      this.patrolPath.push({ x, y })
     }
   }
 
@@ -86,6 +97,8 @@ export class AnimalView {
   
     const move = Number((this.speed * deltaTime).toFixed(0))
 
+    const angle = Math.atan2(dy, dx);
+
     if (Math.abs(dx) < 5) {
       this.animal.x = nextPoint.x
     } else {
@@ -106,6 +119,7 @@ export class AnimalView {
       }
     }
 
+    this.animal.rotation = angle - Math.PI / 2;
   }
 
   destroy() {

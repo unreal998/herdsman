@@ -10,7 +10,7 @@ export class YardController {
   init(app: Application) {
 
     this.model = new YardModel();
-    this.view = new YardView(this.model.colorsConfig);
+    this.view = new YardView();
     this.initView(app);
   }
 

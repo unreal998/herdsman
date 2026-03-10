@@ -7,7 +7,6 @@
 
     "gameSettings": {
       "animalsAmount": 5,
-      "pickupDistance": 36,
       "maxGroup": 5
     }
   }

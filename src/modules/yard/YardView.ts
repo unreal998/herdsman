@@ -1,40 +1,34 @@
-import { Container, Graphics } from "pixi.js";
-import { IColorsConfig } from "../../config/types";
+import { Assets, Container, Sprite, TilingSprite } from "pixi.js";
 
 export class YardView {
-  readonly root = new Container();
-  readonly field = new Graphics();
+  readonly root!: Container;
+  field!: TilingSprite;
 
 
-  private readonly yard = new Graphics();
+  private yard!: Sprite;
 
-  constructor(colorsConfig: IColorsConfig) {
-    this.drawYard(colorsConfig);
-    this.drawField(colorsConfig);
+  constructor() {
+    this.root = new Container();
+    this.drawYard();
+    this.drawField();
     this.root.addChild(this.yard);
     this.root.label = 'yard';
   }
 
-  private drawYard(colorsConfig: IColorsConfig): void {
-    this.yard.clear();
-    this.yard.roundRect(window.innerWidth -400, window.innerHeight -380, 200, 180, 12);
-    this.yard.fill(colorsConfig.yard);
-    this.yard.stroke({
-      color: colorsConfig.border,
-      width: 2,
-      alpha: 0.3,
-    });
-    this.yard.zIndex = 1;
+  private drawYard(): void {
+    this.yard = new Sprite();
+    this.yard.texture = Assets.get('ambar');
+    this.yard.x = window.innerWidth - 400;
+    this.yard.y = window.innerHeight - 380;
+    this.yard.anchor.set(0.5);
+    this.yard.width = 300;
+    this.yard.height = 300;
+    this.yard.rotation = Math.PI / 2;
   }
 
-  private drawField(colorsConfig: IColorsConfig): void {
-    this.field.clear();
-    this.field.roundRect(0, 0, window.innerWidth, window.innerHeight, 0);
-    this.field.fill(colorsConfig.field);
-    this.field.stroke({
-      color: colorsConfig.border,
-      width: 2,
-      alpha: 0.3,
-    });
+  private drawField(): void {
+    const grassTexture = Assets.get('grass');
+    this.field = new TilingSprite({texture: grassTexture, width: window.innerWidth, height: window.innerHeight});
+    this.root.addChild(this.field);
   }
 }

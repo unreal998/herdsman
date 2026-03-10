@@ -1,9 +1,10 @@
-import { Application, Container } from "pixi.js"
+import { Application } from "pixi.js"
 import { HeroModel } from "./HeroModel"
 import { HeroView } from "./HeroView"
 import { HERO_EVENTS } from "./types"
 import EventBus from "../../core/eventBus/EventBus"
 import { ENGINE_EVENTS } from "../engine/types"
+import { SoundManagerInstance } from "../../core/soundManager/SoundManager"
 
 export class HeroController {
 
@@ -34,10 +35,12 @@ export class HeroController {
         this.model.animals.push(animal);
         EventBus.emit(HERO_EVENTS.PICK_UP_ANIMAL_APPROVED, animal);
         this.view.animalCountUpdated(this.model.animals.length >= this.model.animalsLimit ? 'MAX' : this.model.animals.length.toString());
+        SoundManagerInstance.playSound('pickupSound');
     }
 
     private _onRemoveAnimal(animal: string) {
         this.model.animals = this.model.animals.filter(a => a !== animal);
         this.view.animalCountUpdated(this.model.animals.length.toString());
+        SoundManagerInstance.playSound('cowPark', 2);
     }
   }

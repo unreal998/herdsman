@@ -6,7 +6,6 @@ export interface IColorsConfig {
 
 export interface IGameSettings {
     animalsAmount: number
-    pickupDistance: number
     maxGroup: number
 }
 export interface IGameConfig {
