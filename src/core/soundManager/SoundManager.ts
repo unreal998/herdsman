@@ -1,8 +1,9 @@
 import { sound } from '@pixi/sound';
 import EventBus from '../eventBus/EventBus';
 import { CORE_EVENTS } from '../eventBus/type';
+import { ISoundManager } from './types';
 
-export class SoundManager {
+export class SoundManager implements ISoundManager {
   private isAdditionalResourcesReady: boolean = false;
 
   private onAdditionalResourcesLoaded!: (isAdditionalResourcesReady: boolean) => void;

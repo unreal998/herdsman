@@ -1,14 +1,13 @@
-import { Assets, Container, Sprite } from 'pixi.js';
+import { Assets, Sprite } from 'pixi.js';
 import EventBus from '../../core/eventBus/EventBus';
 import { CORE_EVENTS } from '../../core/eventBus/type';
 import { ICoordinate } from '../../core/inputHandler/types';
 import { clamp } from '../../utils/clamp';
+import { BaseView } from '../../core/baseModule/BaseView';
 
-export class AnimalView {
+export class AnimalView extends BaseView {
   private RANGE_MULTIPLIER = 300;
-  public readonly root = new Container();
-  public readonly animal = new Sprite();
-  private onUpdate!: (deltaTime: number) => void;
+  public animal!: Sprite;
 
   private speed: number = 2;
   public isPickedUp: boolean = false;
@@ -18,13 +17,15 @@ export class AnimalView {
   public target: ICoordinate = { x: 0, y: 0 };
 
   constructor() {
+    super();
+    this.onUpdate = this._onUpdate.bind(this);
+    this.animal = new Sprite();
     this.animal.position = { x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight };
     this.init();
   }
 
-  private init() {
-    this.onUpdate = this._onUpdate.bind(this);
-
+  protected override init() {
+    super.init();
     this.root.label = 'animal' + this.root.uid;
 
     this.animal.texture = Assets.get(Math.random() > 0.5 ? 'cow1' : 'cow2');
@@ -48,11 +49,11 @@ export class AnimalView {
     }
   }
 
-  private addListeners() {
+  protected override addListeners() {
     EventBus.on(CORE_EVENTS.UPDATE, this.onUpdate);
   }
 
-  private removeListeners() {
+  protected override removeListeners() {
     EventBus.off(CORE_EVENTS.UPDATE, this.onUpdate);
   }
 
@@ -109,13 +110,5 @@ export class AnimalView {
     }
 
     this.animal.rotation = angle - Math.PI / 2;
-  }
-
-  destroy() {
-    this.removeListeners();
-    this.root.destroy({
-      children: true,
-      texture: true,
-    });
   }
 }

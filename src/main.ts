@@ -1,4 +1,4 @@
-import { Application, Assets } from 'pixi.js';
+import { Application } from 'pixi.js';
 import { YardController } from './modules/yard/YardController';
 import { HeroController } from './modules/hero/HeroController';
 import { InputHandler } from './core/inputHandler/InputHandler';
@@ -10,6 +10,7 @@ import { isColliding } from './core/helpers/collidingDimension';
 import { EngineController } from './modules/engine/EngineController';
 import { ENGINE_EVENTS } from './modules/engine/types';
 import { sound } from '@pixi/sound';
+import { loadAdditionalResources, loadResources } from './utils/recourcesLoader';
 
 export class App {
   private static instance: App | null = null;
@@ -28,33 +29,6 @@ export class App {
       App.instance = new App();
     }
     return App.instance;
-  }
-
-  private async loadResources() {
-    await Assets.load(
-      [
-        { alias: 'grass', src: '/assets/grass.jpg' },
-        { alias: 'hero', src: '/assets/hero/hero_idle.png' },
-        { alias: 'cow1', src: '/assets/cow1.png' },
-        { alias: 'cow2', src: '/assets/cow2.png' },
-        { alias: 'ambar', src: '/assets/ambar.png' },
-      ],
-      progress => {
-        console.log(progress); // 0 → 1
-      }
-    );
-  }
-
-  private async loadAdditionalResources() {
-    Assets.load([
-      { alias: 'bg', src: '/assets/sounds/bg.mp3' },
-      { alias: 'pickupSound', src: '/assets/sounds/cowPick.mp3' },
-      { alias: 'cowPark', src: '/assets/sounds/cowPark.mp3' },
-      { alias: 'hero_walk_1', src: '/assets/hero/hero_walk_1.png' },
-      { alias: 'hero_walk_2', src: '/assets/hero/hero_walk_2.png' },
-    ]).then(() => {
-      EventBus.emit(CORE_EVENTS.ADDITIONAL_RESOURCES_LOADED);
-    });
   }
 
   private createInitialScreen(): void {
@@ -95,30 +69,21 @@ export class App {
       antialias: true,
     });
 
+    await loadResources();
+
     this.createInitialScreen();
 
     document.body.appendChild(this.app.canvas);
 
-    await this.loadResources();
-
-    const inputHandler = new InputHandler();
-    inputHandler.init(this.app.stage);
-
-    const yardController = new YardController();
-    yardController.init(this.app);
-
-    const hudController = new HUDController();
-    hudController.init(this.app);
-
-    const heroController = new HeroController();
-    heroController.init(this.app);
-
+    new InputHandler(this.app.stage);
+    new YardController(this.app.stage);
+    new HUDController(this.app.stage);
+    new HeroController(this.app.stage);
     new EngineController();
 
     this.addListeners();
-
-    (globalThis as any).__PIXI_APP__ = this.app;
-    this.loadAdditionalResources();
+    loadAdditionalResources();
+    globalThis.__PIXI_APP__ = this.app;
   }
 
   private addListeners() {
@@ -132,8 +97,7 @@ export class App {
   }
 
   private _onAddAnimal() {
-    const animalController = new AnimalController();
-    animalController.init(this.app);
+    new AnimalController(this.app.stage);
   }
 }
 

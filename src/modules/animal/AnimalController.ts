@@ -1,4 +1,4 @@
-import { Application, Container } from 'pixi.js';
+import { Container } from 'pixi.js';
 import { AnimalModel } from './AnimalModel';
 import { AnimalView } from './AnimalView';
 import EventBus from '../../core/eventBus/EventBus';
@@ -7,8 +7,9 @@ import { ICoordinate } from '../../core/inputHandler/types';
 import { HUD_EVENTS } from '../hud/types';
 import { ENGINE_EVENTS } from '../engine/types';
 import { offCollision, onCollision } from '../../core/helpers/collidingDimension';
+import { BaseController } from '../../core/baseModule/BaseController';
 
-export class AnimalController {
+export class AnimalController extends BaseController {
   private model!: AnimalModel;
   private view!: AnimalView;
 
@@ -17,32 +18,30 @@ export class AnimalController {
   private onFollowHero!: (target: ICoordinate) => void;
   private onPickUpAnimalRequest!: ({ a, b }: { a: Container; b: Container }) => void;
 
-  constructor() {
+  constructor(stage: Container) {
+    super();
     this.onParkAnimal = this._onParkAnimal.bind(this);
     this.onPickUpAnimal = this._onPickUpAnimal.bind(this);
     this.onFollowHero = this._onFollowHero.bind(this);
     this.onPickUpAnimalRequest = this._onPickUpAnimalRequest.bind(this);
+    this.init(stage);
   }
 
-  init(app: Application) {
+  init(stage: Container) {
     this.model = new AnimalModel();
     this.view = new AnimalView();
 
-    this.initView(app);
+    stage.addChild(this.view.root);
 
     this.addListeners();
   }
 
-  private initView(app: Application) {
-    app.stage.addChild(this.view.root);
-  }
-
-  private addListeners() {
+  protected override addListeners() {
     EventBus.on(HERO_EVENTS.PICK_UP_ANIMAL_APPROVED, this.onPickUpAnimal);
     onCollision(this.view.root.label, 'hero', this.onPickUpAnimalRequest);
   }
 
-  private removeListeners() {
+  protected override removeListeners() {
     EventBus.off(HERO_EVENTS.PICK_UP_ANIMAL_APPROVED, this.onPickUpAnimal);
     EventBus.off(HERO_EVENTS.MOVE, this.onFollowHero);
     offCollision(this.view.root.label, 'hero', this.onPickUpAnimalRequest);
@@ -75,6 +74,6 @@ export class AnimalController {
     this.view.isPickedUp = this.model.isPickedUp;
     EventBus.on(HERO_EVENTS.MOVE, this.onFollowHero);
     onCollision(this.view.root.label, 'yard', this.onParkAnimal);
-    offCollision(this.view.root.label, 'hero', this.onPickUpAnimal);
+    offCollision(this.view.root.label, 'hero', this.onPickUpAnimalRequest);
   }
 }

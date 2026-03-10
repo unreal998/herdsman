@@ -1,19 +1,18 @@
-import { Application } from 'pixi.js';
-import { YardModel } from './YardModel';
+import { Container } from 'pixi.js';
 import { YardView } from './YardView';
+import { BaseController } from '../../core/baseModule/BaseController';
 
-export class YardController {
-  private model!: YardModel;
+export class YardController extends BaseController {
   private view!: YardView;
 
-  init(app: Application) {
-    this.model = new YardModel();
-    this.view = new YardView();
-    this.initView(app);
+  constructor(stage: Container) {
+    super();
+    this.init(stage);
   }
 
-  private initView(app: Application) {
-    app.stage.addChild(this.view.field);
-    app.stage.addChild(this.view.root);
+  init(stage: Container) {
+    this.view = new YardView();
+    stage.addChild(this.view.field);
+    stage.addChild(this.view.root);
   }
 }

@@ -1,13 +1,18 @@
-import { Assets, Container, Sprite, TilingSprite } from 'pixi.js';
+import { Assets, Sprite, TilingSprite } from 'pixi.js';
+import { BaseView } from '../../core/baseModule/BaseView';
 
-export class YardView {
-  readonly root!: Container;
+export class YardView extends BaseView {
   field!: TilingSprite;
 
   private yard!: Sprite;
 
   constructor() {
-    this.root = new Container();
+    super();
+    this.init();
+  }
+
+  protected override init() {
+    super.init();
     this.drawYard();
     this.drawField();
     this.root.addChild(this.yard);
@@ -28,6 +33,5 @@ export class YardView {
   private drawField(): void {
     const grassTexture = Assets.get('grass');
     this.field = new TilingSprite({ texture: grassTexture, width: window.innerWidth, height: window.innerHeight });
-    this.root.addChild(this.field);
   }
 }

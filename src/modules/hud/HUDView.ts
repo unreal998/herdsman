@@ -1,15 +1,18 @@
-import { Container, Text } from 'pixi.js';
+import { Text } from 'pixi.js';
+import { BaseView } from '../../core/baseModule/BaseView';
 
-export class HUDView {
-  public readonly root = new Container();
-  public score = new Text();
+export class HUDView extends BaseView {
+  public score!: Text;
 
   constructor() {
+    super();
     this.init();
   }
 
-  private init() {
+  protected override init() {
+    super.init();
     this.root.zIndex = 1000;
+    this.score = new Text();
     this.score.text = '0';
     this.score.style.fontSize = 60;
     this.score.style.fontWeight = 'bold';

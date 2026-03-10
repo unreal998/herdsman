@@ -1,4 +1,4 @@
-import { Application } from 'pixi.js';
+import { Container } from 'pixi.js';
 import { HeroModel } from './HeroModel';
 import { HeroView } from './HeroView';
 import { HERO_EVENTS } from './types';
@@ -6,8 +6,9 @@ import EventBus from '../../core/eventBus/EventBus';
 import { ENGINE_EVENTS } from '../engine/types';
 import { SoundManagerInstance } from '../../core/soundManager/SoundManager';
 import { CORE_EVENTS } from '../../core/eventBus/type';
+import { BaseController } from '../../core/baseModule/BaseController';
 
-export class HeroController {
+export class HeroController extends BaseController {
   private model!: HeroModel;
   private view!: HeroView;
 
@@ -15,18 +16,23 @@ export class HeroController {
   private onPickUpAnimal!: (animal: string) => void;
   private onAdditionalResourcesLoaded!: () => void;
 
-  init(app: Application) {
+  constructor(stage: Container) {
+    super();
+    this.init(stage);
+  }
+
+  init(stage: Container) {
     this.model = new HeroModel();
     this.view = new HeroView(this.model.speed);
     this.onPickUpAnimal = this._onPickUpAnimal.bind(this);
     this.onRemoveAnimal = this._onRemoveAnimal.bind(this);
     this.onAdditionalResourcesLoaded = this._onAdditionalResourcesLoaded.bind(this);
 
-    app.stage.addChild(this.view.root);
+    stage.addChild(this.view.root);
     this.addListeners();
   }
 
-  private addListeners() {
+  protected override addListeners() {
     EventBus.on(HERO_EVENTS.PICK_UP_ANIMAL_REQUEST, this.onPickUpAnimal);
     EventBus.on(ENGINE_EVENTS.REMOVE_ANIMAL, this.onRemoveAnimal);
     EventBus.on(CORE_EVENTS.ADDITIONAL_RESOURCES_LOADED, this.onAdditionalResourcesLoaded);

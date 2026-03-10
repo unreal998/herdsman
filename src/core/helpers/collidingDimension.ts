@@ -1,6 +1,5 @@
 import { Container, Rectangle } from 'pixi.js';
-
-type CollisionCallback = (payload: any) => void;
+import { CollisionCallback } from './types';
 
 const collisionSubscriptions = new Map<string, CollisionCallback[]>();
 

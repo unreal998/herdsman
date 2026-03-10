@@ -3,13 +3,12 @@ import EventBus from '../../core/eventBus/EventBus';
 import { INPUT_EVENTS, ICoordinate } from '../../core/inputHandler/types';
 import { CORE_EVENTS } from '../../core/eventBus/type';
 import { HERO_EVENTS } from './types';
+import { BaseView } from '../../core/baseModule/BaseView';
 
-export class HeroView {
-  public root!: Container;
+export class HeroView extends BaseView {
   public hero!: AnimatedSprite;
   public heroIndicators!: Text;
   private onClick: (position: ICoordinate) => void;
-  private onUpdate: (deltaTime: number) => void;
   private speed: number;
   public animationsReady: boolean = false;
   public target: ICoordinate = { x: 0, y: 0 };
@@ -17,6 +16,7 @@ export class HeroView {
   private idleTextures: Texture[] = [];
 
   constructor(speed: number) {
+    super();
     this.onClick = this._onClick.bind(this);
     this.onUpdate = this._onUpdate.bind(this);
     this.speed = speed;
@@ -24,13 +24,15 @@ export class HeroView {
     this.init();
   }
 
-  private init() {
+  protected override init() {
+    super.init();
     this.heroIndicators = new Text();
     this.heroIndicators.text = '0';
     this.heroIndicators.style.fill = '#000000';
     this.heroIndicators.style.fontSize = 36;
-    this.heroIndicators.x = -10;
-    this.heroIndicators.y = -30;
+    this.heroIndicators.anchor.set(0.5, 0.5);
+    this.heroIndicators.x = 0;
+    this.heroIndicators.y = -10;
 
     this.idleTextures = [Assets.get('hero')];
     this.hero = new AnimatedSprite(this.idleTextures);
@@ -38,7 +40,6 @@ export class HeroView {
     this.hero.width = 70;
     this.hero.height = 70;
 
-    this.root = new Container();
     this.root.zIndex = 2;
     this.root.label = 'hero';
     this.root.addChild(this.hero);
@@ -47,7 +48,7 @@ export class HeroView {
     this.addListeners();
   }
 
-  addListeners() {
+  protected override addListeners() {
     EventBus.on(INPUT_EVENTS.CLICK, this.onClick);
     EventBus.on(CORE_EVENTS.UPDATE, this.onUpdate);
   }
