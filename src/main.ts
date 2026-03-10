@@ -56,7 +56,7 @@ export class App {
 
     this.addListeners();
 
-    globalThis.__PIXI_APP__ = this.app;
+    (globalThis as any).__PIXI_APP__ = this.app;
   }
 
   private addListeners() {

@@ -38,13 +38,13 @@ export class EngineController {
             this.aggregateAnimals();
             clearInterval(interval);
             this.runRandomInterval();
-        }, Math.random() * 1000);
+        }, Math.random() * 2000);
     };
 
     aggregateAnimals() {
         const animals = this.model.animalsCount;
 
-        if (animals >= 7) return;
+        if (animals >= this.model.animalsLimit) return;
 
         EventBus.emit(ENGINE_EVENTS.ADD_ANIMAL);
         this.model.animalsCount++;

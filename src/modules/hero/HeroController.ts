@@ -3,42 +3,41 @@ import { HeroModel } from "./HeroModel"
 import { HeroView } from "./HeroView"
 import { HERO_EVENTS } from "./types"
 import EventBus from "../../core/eventBus/EventBus"
-import { ICoordinate } from "../../core/inputHandler/types"
+import { ENGINE_EVENTS } from "../engine/types"
 
 export class HeroController {
 
     private model!: HeroModel
     private view!: HeroView
 
-    private onMove!: (position: ICoordinate) => void
-    private onPickUpAnimal!: (animal: Container) => void
+    private onRemoveAnimal!: (animal: string) => void
+    private onPickUpAnimal!: (animal: string) => void
 
     init(app: Application) {
         this.model = new HeroModel()
-        this.view = new HeroView();
+        this.view = new HeroView(this.model.speed);
         this.onPickUpAnimal = this._onPickUpAnimal.bind(this);
-        this.onMove = this._onMove.bind(this);
+        this.onRemoveAnimal = this._onRemoveAnimal.bind(this);
 
-        this.initView(app);
+        app.stage.addChild(this.view.root);
         this.addListeners();
     }
 
     private addListeners() {
-        EventBus.on(HERO_EVENTS.MOVE, this.onMove);
-        EventBus.on(HERO_EVENTS.PICK_UP_ANIMAL, this.onPickUpAnimal);
+        EventBus.on(HERO_EVENTS.PICK_UP_ANIMAL_REQUEST, this.onPickUpAnimal);
+        EventBus.on(ENGINE_EVENTS.REMOVE_ANIMAL, this.onRemoveAnimal);
     }
 
-    private _onMove(position: ICoordinate) {
-        this.model.target = position;
+    private _onPickUpAnimal(animal: string) {
+        if (this.model.animals.length >= this.model.animalsLimit) return;
+
+        this.model.animals.push(animal);
+        EventBus.emit(HERO_EVENTS.PICK_UP_ANIMAL_APPROVED, animal);
+        this.view.animalCountUpdated(this.model.animals.length >= this.model.animalsLimit ? 'MAX' : this.model.animals.length.toString());
     }
 
-    private _onPickUpAnimal(animal: Container) {
-        if (this.model.animals.includes(animal.label) || this.model.animals.length >= 5) return;
-
-        this.model.animals.push(animal.label);
-    }
-
-    private initView(app: Application) {
-        app.stage.addChild(this.view.root);
+    private _onRemoveAnimal(animal: string) {
+        this.model.animals = this.model.animals.filter(a => a !== animal);
+        this.view.animalCountUpdated(this.model.animals.length.toString());
     }
   }
