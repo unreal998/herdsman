@@ -1,4 +1,4 @@
-import { AnimatedSprite, Assets, Container, Sprite, Text, Texture } from "pixi.js"
+import { AnimatedSprite, Assets, Container, Text, Texture } from "pixi.js"
 import EventBus from "../../core/eventBus/EventBus"
 import { INPUT_EVENTS, ICoordinate } from "../../core/inputHandler/types";
 import { CORE_EVENTS } from "../../core/eventBus/type";
@@ -6,19 +6,20 @@ import { HERO_EVENTS } from "./types";
 
 export class HeroView {
 
-  public readonly root = new Container()
-  public hero!: AnimatedSprite | Sprite
-  public readonly heroIndicators = new Text()
-  public target: ICoordinate = { x: 0, y: 0 }
+  public root!: Container;
+  public hero!: AnimatedSprite;
+  public heroIndicators!: Text;
   private onClick: (position: ICoordinate) => void
   private onUpdate: (deltaTime: number) => void
-  private onAdditionalResourcesLoaded: () => void
   private speed: number
+  public animationsReady: boolean = false;
+  public target: ICoordinate = { x: 0, y: 0 }
+  private walkTextures: Texture[] = [];
+  private idleTextures: Texture[] = [];
 
   constructor(speed: number) {
     this.onClick = this._onClick.bind(this)
     this.onUpdate = this._onUpdate.bind(this)
-    this.onAdditionalResourcesLoaded = this._onAdditionalResourcesLoaded.bind(this)
     this.speed = speed;
 
     this.init()
@@ -26,17 +27,20 @@ export class HeroView {
 
   private init() {
 
+    this.heroIndicators = new Text();
     this.heroIndicators.text = '0'
-    this.heroIndicators.x = 10
-    this.heroIndicators.y = -15
+    this.heroIndicators.style.fill = '#000000'
+    this.heroIndicators.style.fontSize = 36
+    this.heroIndicators.x = -10
+    this.heroIndicators.y = -30
 
-    this.hero = new Sprite(Assets.get('hero'))
-    this.hero.texture = Assets.get('hero')
-    this.hero.scale.set(0.5)
+    this.idleTextures = [Assets.get('hero')];
+    this.hero = new AnimatedSprite(this.idleTextures)
     this.hero.anchor.set(0.5)
     this.hero.width = 70
     this.hero.height = 70
 
+    this.root = new Container();
     this.root.zIndex = 2;
     this.root.label = 'hero';
     this.root.addChild(this.hero)
@@ -49,13 +53,13 @@ export class HeroView {
   addListeners() {
     EventBus.on(INPUT_EVENTS.CLICK, this.onClick)
     EventBus.on(CORE_EVENTS.UPDATE, this.onUpdate)
-    EventBus.on(CORE_EVENTS.ADDITIONAL_RESOURCES_LOADED, this.onAdditionalResourcesLoaded)
   }
 
 
   private _onClick({ x, y }: ICoordinate) {
     EventBus.emit(HERO_EVENTS.MOVE, { x, y })
     this.target = { x, y }
+    this.walk();
   }
 
   private moveTowardsTarget(deltaTime: number) {
@@ -63,6 +67,7 @@ export class HeroView {
     const dy = this.target.y - this.root.y
 
     if (Math.abs(dx) < 1 && Math.abs(dy) < 1) {
+      this.idle();
       return;
     }
 
@@ -99,10 +104,18 @@ export class HeroView {
     this.moveTowardsTarget(deltaTime);
   }
 
-  private _onAdditionalResourcesLoaded() {
-    const textures: Texture[] = [Assets.get('hero_walk_1'), Assets.get('hero_walk_2')]
-    this.hero = new AnimatedSprite(textures);
-    (this.hero as AnimatedSprite).loop = true;
-    (this.hero as AnimatedSprite).play();
+  private walk() {
+    if (!this.animationsReady) return;
+    if (this.walkTextures.length === 0) {
+      this.walkTextures = [Assets.get('hero_walk_1'), Assets.get('hero_walk_2')]
+    }
+    this.hero.textures = this.walkTextures;
+    this.hero.animationSpeed = 0.1;
+    this.hero.loop = true;
+    this.hero.play();
+  }
+
+  private idle() {
+    this.hero.textures = this.idleTextures;
   }
 }

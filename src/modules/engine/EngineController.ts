@@ -36,9 +36,9 @@ export class EngineController {
     runRandomInterval() {
         const interval = setTimeout(() => {
             this.aggregateAnimals();
-            clearInterval(interval);
+            clearTimeout(interval);
             this.runRandomInterval();
-        }, Math.random() * 2000);
+        }, Math.random() * this.model.animalsSpawnInterval);
     };
 
     aggregateAnimals() {

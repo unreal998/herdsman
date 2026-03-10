@@ -47,13 +47,13 @@ export class AnimalView {
         this.animal.position.x + (Math.random() * this.RANGE_MULTIPLIER),
         0,
         window.innerWidth
-      )
+      );
     
       const y = clamp(
         this.animal.position.y + (Math.random() * this.RANGE_MULTIPLIER),
         0,
         window.innerHeight
-      )
+      );
       this.patrolPath.push({ x, y })
     }
   }

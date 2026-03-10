@@ -1,6 +1,7 @@
 export class EngineModel {
     private _animalsCount: number = 0;
     private _animalsLimit: number = 12;
+    private _animalsSpawnInterval: number = 3000;
 
     get animalsCount() {
         return this._animalsCount;
@@ -12,6 +13,10 @@ export class EngineModel {
 
     get animalsLimit() {
         return this._animalsLimit;
+    }
+
+    get animalsSpawnInterval() {
+        return this._animalsSpawnInterval;
     }
 
 }
