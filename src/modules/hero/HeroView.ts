@@ -4,6 +4,7 @@ import { INPUT_EVENTS, ICoordinate } from '../../core/inputHandler/types';
 import { CORE_EVENTS } from '../../core/eventBus/type';
 import { HERO_EVENTS, IHeroView } from './types';
 import { BaseView } from '../../core/baseModule/BaseView';
+import { moveToTargetUtil } from '../../utils/moveToTargetUtil';
 
 export class HeroView extends BaseView implements IHeroView {
   public hero!: AnimatedSprite;
@@ -67,30 +68,7 @@ export class HeroView extends BaseView implements IHeroView {
       this.idle();
       return;
     }
-
-    const move = Number((this.speed * deltaTime).toFixed(0));
-    const angle = Math.atan2(dy, dx);
-
-    if (Math.abs(dx) < 5) {
-      this.root.x = this.target.x;
-    } else {
-      if (dx > 0) {
-        this.root.x += move;
-      } else {
-        this.root.x -= move;
-      }
-    }
-
-    if (Math.abs(dy) < 5) {
-      this.root.y = this.target.y;
-    } else {
-      if (dy > 0) {
-        this.root.y += move;
-      } else {
-        this.root.y -= move;
-      }
-    }
-    this.root.rotation = angle - Math.PI / 2;
+    moveToTargetUtil(deltaTime, dx, dy, this.speed, this.root, this.target);
   }
 
   public animalCountUpdated(text: string) {

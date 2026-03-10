@@ -5,6 +5,6 @@ export enum ENGINE_EVENTS {
 
 export interface IEngineModel {
   animalsCount: number;
-  animalsLimit: number;
-  animalsSpawnInterval: number;
+  readonly animalsLimit: number;
+  readonly animalsSpawnInterval: number;
 }

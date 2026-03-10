@@ -5,6 +5,7 @@ import { ICoordinate } from '../../core/inputHandler/types';
 import { clamp } from '../../utils/clamp';
 import { BaseView } from '../../core/baseModule/BaseView';
 import { IAnimalView } from './types';
+import { moveToTargetUtil } from '../../utils/moveToTargetUtil';
 
 export class AnimalView extends BaseView implements IAnimalView {
   private RANGE_MULTIPLIER = 300;
@@ -16,6 +17,7 @@ export class AnimalView extends BaseView implements IAnimalView {
 
   private currentPatrolPoint: number = 0;
   public target: ICoordinate = { x: 0, y: 0 };
+  private targetOffset: ICoordinate = { x: Math.random() * 200, y: Math.random() * 200 };
 
   constructor() {
     super();
@@ -62,7 +64,7 @@ export class AnimalView extends BaseView implements IAnimalView {
     if (!this.isPickedUp) {
       this.moveTowardsNextPatrolPoint(deltaTime);
     } else {
-      this.moveTowardsTarget(deltaTime, this.target);
+      this.moveTowardsTarget(deltaTime, { x: this.target.x - this.targetOffset.x, y: this.target.y - this.targetOffset.y });
     }
   }
 
@@ -86,30 +88,6 @@ export class AnimalView extends BaseView implements IAnimalView {
     const dx = nextPoint.x - this.animal.position.x;
     const dy = nextPoint.y - this.animal.position.y;
 
-    const move = Number((this.speed * deltaTime).toFixed(0));
-
-    const angle = Math.atan2(dy, dx);
-
-    if (Math.abs(dx) < 5) {
-      this.animal.x = nextPoint.x;
-    } else {
-      if (dx > 0) {
-        this.animal.x += move;
-      } else {
-        this.animal.x -= move;
-      }
-    }
-
-    if (Math.abs(dy) < 5) {
-      this.animal.y = nextPoint.y;
-    } else {
-      if (dy > 0) {
-        this.animal.y += move;
-      } else {
-        this.animal.y -= move;
-      }
-    }
-
-    this.animal.rotation = angle - Math.PI / 2;
+    moveToTargetUtil(deltaTime, dx, dy, this.speed, this.animal, nextPoint);
   }
 }
