@@ -6,7 +6,7 @@ import { HERO_EVENTS } from '../hero/types';
 import { ICoordinate } from '../../core/inputHandler/types';
 import { HUD_EVENTS } from '../hud/types';
 import { ENGINE_EVENTS } from '../engine/types';
-import { offCollision, onCollision } from '../../core/helpers/collidingDimension';
+import CollidingDimension from '../../core/helpers/collidingDimension';
 import { BaseController } from '../../core/baseModule/BaseController';
 
 export class AnimalController extends BaseController {
@@ -38,14 +38,14 @@ export class AnimalController extends BaseController {
 
   protected override addListeners() {
     EventBus.on(HERO_EVENTS.PICK_UP_ANIMAL_APPROVED, this.onPickUpAnimal);
-    onCollision(this.view.root.label, 'hero', this.onPickUpAnimalRequest);
+    CollidingDimension.onCollision(this.view.root.label, 'hero', this.onPickUpAnimalRequest);
   }
 
   protected override removeListeners() {
     EventBus.off(HERO_EVENTS.PICK_UP_ANIMAL_APPROVED, this.onPickUpAnimal);
     EventBus.off(HERO_EVENTS.MOVE, this.onFollowHero);
-    offCollision(this.view.root.label, 'hero', this.onPickUpAnimalRequest);
-    offCollision(this.view.root.label, 'yard', this.onParkAnimal);
+    CollidingDimension.offCollision(this.view.root.label, 'hero', this.onPickUpAnimalRequest);
+    CollidingDimension.offCollision(this.view.root.label, 'yard', this.onParkAnimal);
   }
 
   private _onParkAnimal({ a, b }: { a: Container; b: Container }) {
@@ -73,7 +73,7 @@ export class AnimalController extends BaseController {
     this.model.isPickedUp = true;
     this.view.isPickedUp = this.model.isPickedUp;
     EventBus.on(HERO_EVENTS.MOVE, this.onFollowHero);
-    onCollision(this.view.root.label, 'yard', this.onParkAnimal);
-    offCollision(this.view.root.label, 'hero', this.onPickUpAnimalRequest);
+    CollidingDimension.onCollision(this.view.root.label, 'yard', this.onParkAnimal);
+    CollidingDimension.offCollision(this.view.root.label, 'hero', this.onPickUpAnimalRequest);
   }
 }

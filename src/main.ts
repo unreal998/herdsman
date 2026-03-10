@@ -6,7 +6,7 @@ import { CORE_EVENTS } from './core/eventBus/type';
 import EventBus from './core/eventBus/EventBus';
 import { AnimalController } from './modules/animal/AnimalController';
 import { HUDController } from './modules/hud/HUDController';
-import { isColliding } from './core/helpers/collidingDimension';
+import CollidingDimension from './core/helpers/collidingDimension';
 import { EngineController } from './modules/engine/EngineController';
 import { ENGINE_EVENTS } from './modules/engine/types';
 import { sound } from '@pixi/sound';
@@ -93,7 +93,7 @@ export class App {
 
   private _onUpdate({ deltaTime }: { deltaTime: number }) {
     EventBus.emit(CORE_EVENTS.UPDATE, deltaTime);
-    isColliding(this.app.stage);
+    CollidingDimension.isColliding(this.app.stage);
   }
 
   private _onAddAnimal() {
