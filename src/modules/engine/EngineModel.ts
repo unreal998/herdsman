@@ -1,22 +1,21 @@
 export class EngineModel {
-    private _animalsCount: number = 0;
-    private _animalsLimit: number = 12;
-    private _animalsSpawnInterval: number = 3000;
+  private _animalsCount: number = 0;
+  private _animalsLimit: number = 12;
+  private _animalsSpawnInterval: number = 3000;
 
-    get animalsCount() {
-        return this._animalsCount;
-    }
+  get animalsCount() {
+    return this._animalsCount;
+  }
 
-    set animalsCount(animalsCount: number) {
-        this._animalsCount = animalsCount;
-    }
+  set animalsCount(animalsCount: number) {
+    this._animalsCount = animalsCount;
+  }
 
-    get animalsLimit() {
-        return this._animalsLimit;
-    }
+  get animalsLimit() {
+    return this._animalsLimit;
+  }
 
-    get animalsSpawnInterval() {
-        return this._animalsSpawnInterval;
-    }
-
+  get animalsSpawnInterval() {
+    return this._animalsSpawnInterval;
+  }
 }

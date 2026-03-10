@@ -1,5 +1,5 @@
-import { Config } from "../../config/index";
-import { IColorsConfig } from "../../config/types";
+import { Config } from '../../config/index';
+import { IColorsConfig } from '../../config/types';
 
 export class YardModel {
   private colorsConfig_ = Config.colorsConfig;

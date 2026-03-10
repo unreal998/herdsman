@@ -1,4 +1,4 @@
-import rawConfig from "./gameConfig.json"
-import { IGameConfig } from "./types"
+import rawConfig from './gameConfig.json';
+import { IGameConfig } from './types';
 
-export const Config: IGameConfig = rawConfig
+export const Config: IGameConfig = rawConfig;

@@ -1,14 +1,12 @@
-import { Application } from "pixi.js";
-import { YardModel } from "./YardModel";
-import { YardView } from "./YardView";
+import { Application } from 'pixi.js';
+import { YardModel } from './YardModel';
+import { YardView } from './YardView';
 
 export class YardController {
-
   private model!: YardModel;
   private view!: YardView;
 
   init(app: Application) {
-
     this.model = new YardModel();
     this.view = new YardView();
     this.initView(app);

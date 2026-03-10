@@ -1,23 +1,21 @@
 export class HeroModel {
-
-  private _animalsLimit: number = 5
-  private _speed: number = 2
-  private _animals: string[] = []
+  private _animalsLimit: number = 5;
+  private _speed: number = 2;
+  private _animals: string[] = [];
 
   get speed() {
-    return this._speed
+    return this._speed;
   }
 
   get animals() {
-    return this._animals
+    return this._animals;
   }
 
   set animals(animals: string[]) {
-    this._animals = animals
+    this._animals = animals;
   }
 
   get animalsLimit() {
-    return this._animalsLimit
+    return this._animalsLimit;
   }
-
 }

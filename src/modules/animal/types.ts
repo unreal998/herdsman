@@ -1,4 +1,1 @@
-export type AnimalState =
-    | "IDLE"
-    | "FOLLOW"
-    | "DELIVERED"
+export type AnimalState = 'IDLE' | 'FOLLOW' | 'DELIVERED';

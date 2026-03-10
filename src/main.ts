@@ -1,26 +1,26 @@
-import { Application, Assets } from "pixi.js";
-import { YardController } from "./modules/yard/YardController";
-import { HeroController } from "./modules/hero/HeroController";
-import { InputHandler } from "./core/inputHandler/InputHandler";
-import { CORE_EVENTS } from "./core/eventBus/type";
-import EventBus from "./core/eventBus/EventBus";
-import { AnimalController } from "./modules/animal/AnimalController";
-import { HUDController } from "./modules/hud/HUDController";
-import { isColliding } from "./core/helpers/collidingDimension";
-import { EngineController } from "./modules/engine/EngineController";
-import { ENGINE_EVENTS } from "./modules/engine/types";
-import { sound } from "@pixi/sound";
+import { Application, Assets } from 'pixi.js';
+import { YardController } from './modules/yard/YardController';
+import { HeroController } from './modules/hero/HeroController';
+import { InputHandler } from './core/inputHandler/InputHandler';
+import { CORE_EVENTS } from './core/eventBus/type';
+import EventBus from './core/eventBus/EventBus';
+import { AnimalController } from './modules/animal/AnimalController';
+import { HUDController } from './modules/hud/HUDController';
+import { isColliding } from './core/helpers/collidingDimension';
+import { EngineController } from './modules/engine/EngineController';
+import { ENGINE_EVENTS } from './modules/engine/types';
+import { sound } from '@pixi/sound';
 
 export class App {
   private static instance: App | null = null;
 
   private app!: Application;
-  private onUpdate!: ({ deltaTime } : {deltaTime: number}) => void
-  private onAddAnimal!: () => void
+  private onUpdate!: ({ deltaTime }: { deltaTime: number }) => void;
+  private onAddAnimal!: () => void;
 
-  constructor () {
-    this.onUpdate = this._onUpdate.bind(this)
-    this.onAddAnimal = this._onAddAnimal.bind(this)
+  constructor() {
+    this.onUpdate = this._onUpdate.bind(this);
+    this.onAddAnimal = this._onAddAnimal.bind(this);
   }
 
   public static getInstance(): App {
@@ -31,24 +31,27 @@ export class App {
   }
 
   private async loadResources() {
-    await Assets.load([
-      {alias: "grass", src: "/assets/grass.jpg"},
-      {alias: "hero", src: "/assets/hero/hero_idle.png"},
-      {alias: "cow1", src: "/assets/cow1.png"},
-      {alias: "cow2", src: "/assets/cow2.png"},
-      {alias: "ambar", src: "/assets/ambar.png"},
-    ], (progress) => {
-      console.log(progress); // 0 → 1
-    });
+    await Assets.load(
+      [
+        { alias: 'grass', src: '/assets/grass.jpg' },
+        { alias: 'hero', src: '/assets/hero/hero_idle.png' },
+        { alias: 'cow1', src: '/assets/cow1.png' },
+        { alias: 'cow2', src: '/assets/cow2.png' },
+        { alias: 'ambar', src: '/assets/ambar.png' },
+      ],
+      progress => {
+        console.log(progress); // 0 → 1
+      }
+    );
   }
 
   private async loadAdditionalResources() {
     Assets.load([
-      {alias: "bg", src: "/assets/sounds/bg.mp3"},
-      {alias: "pickupSound", src: "/assets/sounds/cowPick.mp3"},
-      {alias: "cowPark", src: "/assets/sounds/cowPark.mp3"},
-      {alias: "hero_walk_1", src: "/assets/hero/hero_walk_1.png"},
-      {alias: "hero_walk_2", src: "/assets/hero/hero_walk_2.png"},
+      { alias: 'bg', src: '/assets/sounds/bg.mp3' },
+      { alias: 'pickupSound', src: '/assets/sounds/cowPick.mp3' },
+      { alias: 'cowPark', src: '/assets/sounds/cowPark.mp3' },
+      { alias: 'hero_walk_1', src: '/assets/hero/hero_walk_1.png' },
+      { alias: 'hero_walk_2', src: '/assets/hero/hero_walk_2.png' },
     ]).then(() => {
       EventBus.emit(CORE_EVENTS.ADDITIONAL_RESOURCES_LOADED);
     });
@@ -72,11 +75,15 @@ export class App {
       </div>
     `;
     document.body.appendChild(initialDiv);
-    
-    window.addEventListener("pointerdown", () => {
-      sound.context.audioContext.resume()
-      document.getElementById('initial-screen')?.remove();
-    }, { once: true })
+
+    window.addEventListener(
+      'pointerdown',
+      () => {
+        sound.context.audioContext.resume();
+        document.getElementById('initial-screen')?.remove();
+      },
+      { once: true }
+    );
   }
 
   public async init(): Promise<void> {
@@ -115,20 +122,19 @@ export class App {
   }
 
   private addListeners() {
-    this.app.ticker.add(this.onUpdate)
+    this.app.ticker.add(this.onUpdate);
     EventBus.on(ENGINE_EVENTS.ADD_ANIMAL, this.onAddAnimal);
   }
 
-  private _onUpdate({deltaTime}: {deltaTime: number}) {
-    EventBus.emit(CORE_EVENTS.UPDATE, deltaTime)
-    isColliding(this.app.stage)
+  private _onUpdate({ deltaTime }: { deltaTime: number }) {
+    EventBus.emit(CORE_EVENTS.UPDATE, deltaTime);
+    isColliding(this.app.stage);
   }
 
   private _onAddAnimal() {
     const animalController = new AnimalController();
     animalController.init(this.app);
   }
-
 }
 
 App.getInstance().init();

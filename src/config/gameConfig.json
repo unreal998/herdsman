@@ -1,12 +1,12 @@
-{ 
-    "colorsConfig": {
-      "field": 3050322,
-      "yard": 16765471,
-      "border": 1776411
-    },
+{
+  "colorsConfig": {
+    "field": 3050322,
+    "yard": 16765471,
+    "border": 1776411
+  },
 
-    "gameSettings": {
-      "animalsAmount": 5,
-      "maxGroup": 5
-    }
+  "gameSettings": {
+    "animalsAmount": 5,
+    "maxGroup": 5
   }
+}

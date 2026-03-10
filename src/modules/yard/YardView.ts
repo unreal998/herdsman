@@ -1,9 +1,8 @@
-import { Assets, Container, Sprite, TilingSprite } from "pixi.js";
+import { Assets, Container, Sprite, TilingSprite } from 'pixi.js';
 
 export class YardView {
   readonly root!: Container;
   field!: TilingSprite;
-
 
   private yard!: Sprite;
 
@@ -28,7 +27,7 @@ export class YardView {
 
   private drawField(): void {
     const grassTexture = Assets.get('grass');
-    this.field = new TilingSprite({texture: grassTexture, width: window.innerWidth, height: window.innerHeight});
+    this.field = new TilingSprite({ texture: grassTexture, width: window.innerWidth, height: window.innerHeight });
     this.root.addChild(this.field);
   }
 }

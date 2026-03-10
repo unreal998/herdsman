@@ -1,14 +1,10 @@
-import { Container, Rectangle } from "pixi.js"
+import { Container, Rectangle } from 'pixi.js';
 
 type CollisionCallback = (payload: any) => void;
 
 const collisionSubscriptions = new Map<string, CollisionCallback[]>();
 
-export function onCollision(
-  labelA: string,
-  labelB: string,
-  callback: CollisionCallback
-) {
+export function onCollision(labelA: string, labelB: string, callback: CollisionCallback) {
   const key = `${labelA}:${labelB}`;
 
   if (!collisionSubscriptions.has(key)) {
@@ -18,11 +14,7 @@ export function onCollision(
   collisionSubscriptions.get(key)!.push(callback);
 }
 
-export function offCollision(
-  labelA: string,
-  labelB: string,
-  callback: CollisionCallback
-) {
+export function offCollision(labelA: string, labelB: string, callback: CollisionCallback) {
   const key = `${labelA}:${labelB}`;
   const reverseKey = `${labelB}:${labelA}`;
 
@@ -50,19 +42,9 @@ export function isColliding(stage: Container) {
       const aBounds = itemA.getBounds();
       const bBounds = itemB.getBounds();
 
-      const rectA = new Rectangle(
-        aBounds.x,
-        aBounds.y,
-        aBounds.width,
-        aBounds.height
-      );
+      const rectA = new Rectangle(aBounds.x, aBounds.y, aBounds.width, aBounds.height);
 
-      const rectB = new Rectangle(
-        bBounds.x,
-        bBounds.y,
-        bBounds.width,
-        bBounds.height
-      );
+      const rectB = new Rectangle(bBounds.x, bBounds.y, bBounds.width, bBounds.height);
 
       if (rectA.intersects(rectB)) {
         emitCollision(itemA, itemB);
